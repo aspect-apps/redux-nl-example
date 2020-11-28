@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -8,8 +8,10 @@ import {
   View,
 } from 'react-native';
 import {Provider} from 'react-redux';
+import { ReduxNL } from 'redux-nl';
+import { CatFactsList } from './cat-facts-list';
 import FactComponent from './FactComponent';
-import store from './redux';
+import {store} from './store';
 
 const Facts = [{id: 1}, {id: 2}, {id: 3}];
 
@@ -30,6 +32,21 @@ const styles = StyleSheet.create({
 
 const App = () => {
   const handleShowFavorites = () => {};
+  
+
+  useEffect(() => {
+    ReduxNL.get("/facts", {
+      meta: {
+        headers: {
+          "x-rapidapi-key": "rAHO82BrgJmshpIHJ8mpTVz2vvPyp1c0X1gjsn6UYDxEe7on7T",
+	        "x-rapidapi-host": "brianiswu-cat-facts-v1.p.rapidapi.com",
+        }
+      },
+      onFinal: (action) => {
+        console.log(action)
+      }
+    })
+  }, []);
 
   return (
     <Provider store={store}>
@@ -45,6 +62,8 @@ const App = () => {
         {Facts.map(({id, text}) => {
           return <FactComponent key={id} id={id} text={text} />;
         })}
+
+        <CatFactsList />
       </SafeAreaView>
     </Provider>
   );

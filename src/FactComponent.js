@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  AsyncStorage,
   Image,
   StyleSheet,
   TextInput,
@@ -8,13 +7,7 @@ import {
   View,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {
-  ADD_TEXT_BUBBLE,
-  ADD_COMPANY_TO_FAVORITES,
-  REMOVE_COMPANY_FROM_FAVORITES,
-  UPDATE_TEXT_BUBBLE,
-  REMOVE_TEXT_BUBBLE,
-} from './redux';
+import { Types } from './config/types';
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -54,18 +47,18 @@ const FactComponent = ({id}) => {
   const onChangeText = (text) => {
     if (!textValue) {
       dispatch({
-        type: ADD_TEXT_BUBBLE,
+        type: Types.ADD_TEXT_BUBBLE,
         payload: {text, id},
       });
     } else {
       if (!text) {
         dispatch({
-          type: REMOVE_TEXT_BUBBLE,
+          type: Types.REMOVE_TEXT_BUBBLE,
           payload: {id},
         });
       } else {
         dispatch({
-          type: UPDATE_TEXT_BUBBLE,
+          type: Types.UPDATE_TEXT_BUBBLE,
           payload: {text, id},
         });
       }
@@ -75,12 +68,12 @@ const FactComponent = ({id}) => {
   const handleSetFavorite = () => {
     if (isFavorite) {
       dispatch({
-        type: REMOVE_COMPANY_FROM_FAVORITES,
+        type: Types.REMOVE_COMPANY_FROM_FAVORITES,
         payload: id,
       });
     } else {
       dispatch({
-        type: ADD_COMPANY_TO_FAVORITES,
+        type: Types.ADD_COMPANY_TO_FAVORITES,
         payload: id,
       });
     }
