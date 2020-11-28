@@ -1,20 +1,28 @@
 /** IMPORTS */
 import {applyMiddleware, combineReducers, createStore} from 'redux';
-import {persistMiddleware, persistMachine} from 'redux-persist-machine';
+import {persistMiddleware, createPersistMachine} from 'redux-persist-machine';
 import {saveState, loadState} from 'react-native-redux-persist-tree';
 
 /** CONSTANTS */
-const InitialState = {
+const InitialFavoritesState = {
   favorites: [],
+};
+
+const InitialTextsState = {
+  texts: [],
 };
 
 /** TYPES */
 const ADD_COMPANY_TO_FAVORITES = 'ADD_COMPANY_TO_FAVORITES';
 const REMOVE_COMPANY_FROM_FAVORITES = 'REMOVE_COMPANY_FROM_FAVORITES';
-const LOAD_FAVORITES = 'LOAD_FAVORITES';
 
-/** REDUCER */
-const favoritesReducer = (state = InitialState, action) => {
+const UPDATE_TEXT_BUBBLE = 'UPDATE_TEXT_BUBBLE';
+const ADD_TEXT_BUBBLE = 'ADD_TEXT_BUBBLE';
+const REMOVE_TEXT_BUBBLE = 'REMOVE_TEXT_BUBBLE';
+const LOAD_TEXTS = 'LOAD_TEXTS';
+
+/** REDUCERS */
+const favoritesReducer = (state = InitialFavoritesState, action) => {
   switch (action.type) {
     case ADD_COMPANY_TO_FAVORITES: {
       return {
@@ -30,7 +38,44 @@ const favoritesReducer = (state = InitialState, action) => {
         ],
       };
     }
-    case LOAD_FAVORITES: {
+    case 'LOAD_FAVORITES': {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
+const textsReducer = (state = InitialTextsState, action) => {
+  switch (action.type) {
+    case ADD_TEXT_BUBBLE: {
+      return {...state, texts: [...state.texts, action.payload]};
+    }
+    case UPDATE_TEXT_BUBBLE: {
+      return {
+        ...state,
+        texts: state.texts.map((text) => {
+          if (text.id === action.payload.id) {
+            return action.payload;
+          } else {
+            return text;
+          }
+        }),
+      };
+    }
+    case REMOVE_TEXT_BUBBLE: {
+      return {
+        ...state,
+        texts: [
+          ...state.texts.filter((text) => !(text.id === action.payload.id)),
+        ],
+      };
+    }
+    case LOAD_TEXTS: {
       return {
         ...state,
         ...action.payload,
@@ -44,6 +89,7 @@ const favoritesReducer = (state = InitialState, action) => {
 
 const rootReducer = combineReducers({
   favorites: favoritesReducer,
+  texts: textsReducer,
 });
 
 /** MIDDLEWARE */
@@ -71,17 +117,20 @@ const store = createStore(rootReducer, applyMiddleware(...middleware));
  */
 const persistThisData = {
   favorites: {
-    values: ['favorites'],
-    action: LOAD_FAVORITES,
     key: '@favorites',
+  },
+  texts: {
+    key: '@texts',
   },
 };
 
-persistMachine(persistThisData, store, true);
+createPersistMachine(persistThisData, store, true);
 
 export {
   store as default,
   ADD_COMPANY_TO_FAVORITES,
   REMOVE_COMPANY_FROM_FAVORITES,
-  LOAD_FAVORITES,
+  REMOVE_TEXT_BUBBLE,
+  UPDATE_TEXT_BUBBLE,
+  ADD_TEXT_BUBBLE,
 };

@@ -1,7 +1,20 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  AsyncStorage,
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {ADD_COMPANY_TO_FAVORITES, REMOVE_COMPANY_FROM_FAVORITES} from './redux';
+import {
+  ADD_TEXT_BUBBLE,
+  ADD_COMPANY_TO_FAVORITES,
+  REMOVE_COMPANY_FROM_FAVORITES,
+  UPDATE_TEXT_BUBBLE,
+  REMOVE_TEXT_BUBBLE,
+} from './redux';
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -30,11 +43,34 @@ const styles = StyleSheet.create({
   iconButton: {},
 });
 
-const FactComponent = ({id, text}) => {
+const FactComponent = ({id}) => {
   const dispatch = useDispatch();
-  const {favorites} = useSelector((state) => state.favorites);
+  const {favorites, texts} = useSelector((state) => state);
 
-  const isFavorite = favorites.filter((favorite) => favorite === id).length > 0;
+  const isFavorite =
+    favorites.favorites.filter((favorite) => favorite === id).length > 0;
+  const textValue = texts.texts.filter((text) => text.id === id)[0]?.text;
+
+  const onChangeText = (text) => {
+    if (!textValue) {
+      dispatch({
+        type: ADD_TEXT_BUBBLE,
+        payload: {text, id},
+      });
+    } else {
+      if (!text) {
+        dispatch({
+          type: REMOVE_TEXT_BUBBLE,
+          payload: {id},
+        });
+      } else {
+        dispatch({
+          type: UPDATE_TEXT_BUBBLE,
+          payload: {text, id},
+        });
+      }
+    }
+  };
 
   const handleSetFavorite = () => {
     if (isFavorite) {
@@ -56,9 +92,12 @@ const FactComponent = ({id, text}) => {
 
   return (
     <View style={styles.rootContainer}>
-      <View style={styles.factContainer}>
-        <Text style={styles.textStyle}>{text}</Text>
-      </View>
+      <TextInput
+        multiline
+        style={styles.factContainer}
+        onChangeText={onChangeText}
+        value={textValue}
+      />
 
       <TouchableOpacity style={styles.iconButton} onPress={handleSetFavorite}>
         <Image source={favoriteImage} />

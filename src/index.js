@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   Image,
   SafeAreaView,
@@ -7,27 +7,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Provider, useDispatch} from 'react-redux';
+import {Provider} from 'react-redux';
 import FactComponent from './FactComponent';
-import store, {LOAD_FAVORITES} from './redux';
+import store from './redux';
 
-const Facts = [
-  {
-    id: 1,
-    text:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat eum qui nisi dolorem id itaque quasi dolorum est omnis adipisci!',
-  },
-  {
-    id: 2,
-    text:
-      'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptate omnis, fugiat veniam a magnam eaque?',
-  },
-  {
-    id: 3,
-    text:
-      'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Assumenda et unde sit, necessitatibus mollitia, aut dolore sapiente a ducimus sint illo doloribus possimus non tempora quaerat omnis dolorum officiis quia?',
-  },
-];
+const Facts = [{id: 1}, {id: 2}, {id: 3}];
 
 const styles = StyleSheet.create({
   header: {
