@@ -7,9 +7,9 @@ export const CatFactsList = () => {
 
     return (
         <ScrollView contentContainerStyle={{ padding: 20, backgroundColor: "gray" }}>
-            {catFacts.map(({ id, text }) => (
-            <View key={id} style={{ margin: 12, backgroundColor: "white" }}>
-                <Text>{text}</Text>
+            {catFacts.map(({ _id, text }) => (
+            <View key={_id} style={{ margin: 12, backgroundColor: "white" }}>
+                <Text key={_id}>{text}</Text>
             </View>
             ))}
         </ScrollView>
