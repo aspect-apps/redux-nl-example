@@ -1,16 +1,9 @@
 import React, {useEffect} from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {Provider} from 'react-redux';
 import {ReduxNL} from 'redux-nl';
-import {CatFactsList} from './cat-facts-list';
-import FactComponent from './FactComponent';
+import {CatFactsList} from './components/cat-facts-list';
+import NoteComponent from './components/note-component';
 import {store} from './store';
 
 const Notes = [{id: 1}, {id: 2}, {id: 3}];
@@ -20,7 +13,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginVertical: 15,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
 
@@ -31,8 +24,6 @@ const styles = StyleSheet.create({
 });
 
 const App = () => {
-  const handleShowFavorites = () => {};
-
   useEffect(() => {
     ReduxNL.get('/facts', {
       meta: {
@@ -52,15 +43,11 @@ const App = () => {
     <Provider store={store}>
       <SafeAreaView>
         <View style={styles.header}>
-          <View />
           <Text style={styles.headerTitle}>Cat Facts</Text>
-          <TouchableOpacity onPress={handleShowFavorites}>
-            <Image source={require('./img/heart.png')} />
-          </TouchableOpacity>
         </View>
 
         {Notes.map(({id, text}) => {
-          return <FactComponent key={id} id={id} text={text} />;
+          return <NoteComponent key={id} id={id} text={text} />;
         })}
 
         <CatFactsList />

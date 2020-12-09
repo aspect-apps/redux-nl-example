@@ -1,14 +1,11 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
-import {
-  createPersistMachine,
-  getPersistMachineAction,
-} from 'redux-persist-machine';
+import {createPersistMachine} from 'redux-persist-machine';
 import {saveState, loadState} from 'react-native-redux-persist-tree';
 import {ReduxNL, ActionReducer} from 'redux-nl';
 import {favoritesReducer} from './reducers/favourites-reducer';
 import {textsReducer} from './reducers/text-reducer';
 import createSagaMiddleware from 'redux-saga';
-import {all, spawn, take, takeLatest} from 'redux-saga/effects';
+import {takeLatest} from 'redux-saga/effects';
 import {composeWithDevTools} from 'redux-devtools-extension';
 import {catFacts} from './reducers/cat-facts';
 

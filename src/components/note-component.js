@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import { Types } from './config/types';
+import {Types} from '../config/types';
 
 const styles = StyleSheet.create({
   rootContainer: {
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   iconButton: {},
 });
 
-const FactComponent = ({id}) => {
+const NoteComponent = ({id}) => {
   const dispatch = useDispatch();
   const {favorites, texts} = useSelector((state) => state);
 
@@ -80,8 +80,8 @@ const FactComponent = ({id}) => {
   };
 
   const favoriteImage = isFavorite
-    ? require('./img/heart.png')
-    : require('./img/heart-outline.png');
+    ? require('../img/heart.png')
+    : require('../img/heart-outline.png');
 
   return (
     <View style={styles.rootContainer}>
@@ -99,4 +99,4 @@ const FactComponent = ({id}) => {
   );
 };
 
-export default FactComponent;
+export default NoteComponent;
