@@ -1,25 +1,26 @@
-
 import {applyMiddleware, combineReducers, createStore} from 'redux';
-import {persistMiddleware, createPersistMachine} from 'redux-persist-machine';
+import {
+  createPersistMachine,
+  getPersistMachineAction,
+} from 'redux-persist-machine';
 import {saveState, loadState} from 'react-native-redux-persist-tree';
-import { ReduxNL, ActionReducer } from "redux-nl";
+import {ReduxNL, ActionReducer} from 'redux-nl';
 import {favoritesReducer} from './reducers/favourites-reducer';
 import {textsReducer} from './reducers/text-reducer';
 import createSagaMiddleware from 'redux-saga';
-import { all, spawn, take, takeLatest } from 'redux-saga/effects';
-import {composeWithDevTools } from "redux-devtools-extension";
-import { catFacts } from './reducers/cat-facts';
+import {all, spawn, take, takeLatest} from 'redux-saga/effects';
+import {composeWithDevTools} from 'redux-devtools-extension';
+import {catFacts} from './reducers/cat-facts';
 
 const rootReducer = combineReducers({
-    favorites: favoritesReducer,
-    texts: textsReducer,
-    catFacts: catFacts,
-    action: ActionReducer,
+  favorites: favoritesReducer,
+  texts: textsReducer,
+  catFacts: catFacts,
+  action: ActionReducer,
 });
 
-
 const composeEnhancers = composeWithDevTools({
-    maxAge: 200
+  maxAge: 200,
 });
 
 /**
@@ -27,27 +28,6 @@ const composeEnhancers = composeWithDevTools({
  * will take a load and save function
  * from the specific storage that is being used.
  */
-const sagaMiddleware = createSagaMiddleware();
-const middleware = composeEnhancers(
-    applyMiddleware(...[
-        () => persistMiddleware(saveState, loadState), 
-        sagaMiddleware
-    ])
-);
-
-/** STORE */
-const store = createStore(rootReducer, middleware);
-
-ReduxNL.setup(store, sagaMiddleware, {
-  defaultUrl: "https://brianiswu-cat-facts-v1.p.rapidapi.com/",
-  isDev: true,
-});
-
-sagaMiddleware.run(sagas);
-
-function* sagas() {
-    yield takeLatest("*", (action) => console.log("Working !!!"))
-}
 
 /**
  * Each property contains specifications
@@ -61,14 +41,39 @@ function* sagas() {
  * which will load upon a specific action.
  */
 const persistThisData = {
-    favorites: {
-        key: '@favorites',
-    },
-    texts: {
-        key: '@texts',
-    },
+  favorites: {
+    key: '@favorites',
+  },
+  texts: {
+    key: '@texts',
+  },
 };
 
-createPersistMachine(persistThisData, store, true);
+const persistMiddleware = createPersistMachine(
+  persistThisData,
+  saveState,
+  loadState,
+);
 
-export { store };
+const sagaMiddleware = createSagaMiddleware();
+
+const middleware = composeEnhancers(
+  applyMiddleware(...[persistMiddleware, sagaMiddleware]),
+);
+
+/** STORE */
+const store = createStore(rootReducer, middleware);
+
+ReduxNL.setup(store, sagaMiddleware, {
+  defaultUrl: 'https://brianiswu-cat-facts-v1.p.rapidapi.com/',
+  isDev: true,
+});
+
+sagaMiddleware.run(sagas);
+persistMiddleware.run(store);
+
+function* sagas() {
+  yield takeLatest('*', (action) => console.log('Working !!!'));
+}
+
+export {store};

@@ -1,4 +1,5 @@
 import { Types } from "../config/types";
+import {getPersistMachineAction} from "redux-persist-machine"
 
 /** Constants */
 const InitialFavoritesState = {
@@ -21,7 +22,7 @@ export const favoritesReducer = (state = InitialFavoritesState, action) => {
           ],
         };
       }
-      case 'LOAD_FAVORITES': {
+      case getPersistMachineAction('favorites'): {
         return {
           ...state,
           ...action.payload,
